@@ -35,7 +35,13 @@ export function Button({
     >
       {loading ? (
         <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-          <ActivityIndicator color={variant === 'primary' ? theme.colors.text.inverse : theme.colors.primary} />
+          <ActivityIndicator
+            color={
+              variant === 'primary' || variant === 'danger'
+                ? theme.colors.text.inverse
+                : theme.colors.primary
+            }
+          />
         </View>
       ) : (
         <Text style={styles.text} maxFontSizeMultiplier={1.5}>

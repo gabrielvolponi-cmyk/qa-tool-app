@@ -1,25 +1,40 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Card, Screen } from '@components/common';
 import { strings } from '@constants/strings';
-import { MOCK_PROJECTS, type ProjectRow } from '@services/mockData';
+import { getClientById, type ProjectRow } from '@services/mockData';
+import { useProjectsStore } from '@store/projectStore';
 import { useTheme } from '@theme';
 import type { ProjectsStackParamList } from '@app-types/navigation';
 
 export function ProjectListScreen() {
   const { theme } = useTheme();
   const navigation = useNavigation<NativeStackNavigationProp<ProjectsStackParamList>>();
+  const items = useProjectsStore((s) => s.projects);
   const [refreshing, setRefreshing] = useState(false);
-  const [items, setItems] = useState<ProjectRow[]>(MOCK_PROJECTS);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={strings.projects.addProjectA11y}
+          onPress={() => navigation.navigate('ProjectCreate')}
+          hitSlop={12}
+          style={({ pressed }) => [{ opacity: pressed ? 0.75 : 1, paddingHorizontal: theme.spacing.sm }]}
+        >
+          <Ionicons name="add-circle-outline" size={28} color={theme.colors.primary} />
+        </Pressable>
+      ),
+    });
+  }, [navigation, theme.colors.primary, theme.spacing.sm]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    setTimeout(() => {
-      setItems([...MOCK_PROJECTS]);
-      setRefreshing(false);
-    }, 800);
+    setTimeout(() => setRefreshing(false), 800);
   }, []);
 
   const styles = useMemo(
@@ -52,32 +67,40 @@ export function ProjectListScreen() {
         badgeText: {
           ...theme.typography.captionBold,
           color: theme.colors.primary,
-          textTransform: 'capitalize',
         },
       }),
     [theme]
   );
 
+  const statusLabel = useCallback((s: ProjectRow['status']) => {
+    if (s === 'active') return strings.projects.create.statusActive;
+    if (s === 'paused') return strings.projects.create.statusPaused;
+    return strings.projects.create.statusArchived;
+  }, []);
+
   const renderItem = useCallback(
-    ({ item }: { item: ProjectRow }) => (
-      <Pressable
-        onPress={() => navigation.navigate('ProjectDetail', { projectId: item.id, name: item.name })}
-        accessibilityRole="button"
-        accessibilityLabel={`${item.name}, ${strings.projects.openDetailA11y}`}
-        style={({ pressed }) => [{ opacity: pressed ? 0.92 : 1 }]}
-      >
-        <Card style={styles.cardSpacing} accent={false}>
-          <Text style={styles.name}>{item.name}</Text>
-          <Text style={styles.meta}>
-            {item.openQaCount} QA abertos
-          </Text>
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>{item.status}</Text>
-          </View>
-        </Card>
-      </Pressable>
-    ),
-    [navigation, styles]
+    ({ item }: { item: ProjectRow }) => {
+      const client = getClientById(item.clientId);
+      return (
+        <Pressable
+          onPress={() => navigation.navigate('ProjectDetail', { projectId: item.id, name: item.name })}
+          accessibilityRole="button"
+          accessibilityLabel={`${item.name}, ${strings.projects.openDetailA11y}`}
+          style={({ pressed }) => [{ opacity: pressed ? 0.92 : 1 }]}
+        >
+          <Card style={styles.cardSpacing} accent={false}>
+            <Text style={styles.name}>{item.name}</Text>
+            <Text style={styles.meta}>
+              {client?.name ?? strings.projects.clientLabelShort} · {item.openQaCount} QA abertos
+            </Text>
+            <View style={styles.badge}>
+              <Text style={styles.badgeText}>{statusLabel(item.status)}</Text>
+            </View>
+          </Card>
+        </Pressable>
+      );
+    },
+    [navigation, statusLabel, styles]
   );
 
   const keyExtractor = useCallback((item: ProjectRow) => item.id, []);

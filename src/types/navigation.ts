@@ -1,5 +1,6 @@
 export type ProjectsStackParamList = {
   ProjectList: undefined;
+  ProjectCreate: undefined;
   ProjectDetail: { projectId: string; name: string };
 };
 

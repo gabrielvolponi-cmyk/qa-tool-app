@@ -1,7 +1,7 @@
 import { Platform, StyleSheet } from 'react-native';
 import type { Theme } from '@theme/createTheme';
 
-export function createButtonStyles(theme: Theme, variant: 'primary' | 'secondary' | 'ghost') {
+export function createButtonStyles(theme: Theme, variant: 'primary' | 'secondary' | 'ghost' | 'danger') {
   const { colors, spacing, borderRadius, typography, shadows } = theme;
 
   const base = {
@@ -17,17 +17,19 @@ export function createButtonStyles(theme: Theme, variant: 'primary' | 'secondary
       ? colors.primary
       : variant === 'secondary'
         ? colors.brandMuted
-        : 'transparent';
+        : variant === 'danger'
+          ? colors.error
+          : 'transparent';
 
   const textColor =
-    variant === 'primary'
+    variant === 'primary' || variant === 'danger'
       ? colors.text.inverse
       : variant === 'secondary'
         ? colors.text.primary
         : colors.primary;
 
   const primaryExtra =
-    variant === 'primary'
+    variant === 'primary' || variant === 'danger'
       ? Platform.select({
           ios: shadows.primaryButton,
           android: { elevation: 4 },
@@ -41,7 +43,8 @@ export function createButtonStyles(theme: Theme, variant: 'primary' | 'secondary
       backgroundColor: bg,
       opacity: 1,
       borderWidth: variant === 'secondary' ? StyleSheet.hairlineWidth : 0,
-      borderColor: variant === 'secondary' ? colors.border.light : 'transparent',
+      borderColor:
+        variant === 'secondary' ? colors.border.light : 'transparent',
       ...primaryExtra,
     },
     pressed: {

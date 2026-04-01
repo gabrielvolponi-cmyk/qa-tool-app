@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ProjectListScreen } from '@screens/ProjectListScreen/ProjectListScreen';
+import { ProjectCreateScreen } from '@screens/ProjectCreateScreen/ProjectCreateScreen';
 import { ProjectDetailScreen } from '@screens/ProjectDetailScreen/ProjectDetailScreen';
 import { strings } from '@constants/strings';
 import { useTheme } from '@theme';
@@ -29,6 +30,11 @@ export function ProjectsStackNavigator() {
         name="ProjectList"
         component={ProjectListScreen}
         options={{ title: strings.projects.title }}
+      />
+      <Stack.Screen
+        name="ProjectCreate"
+        component={ProjectCreateScreen}
+        options={{ title: strings.projects.create.title }}
       />
       <Stack.Screen
         name="ProjectDetail"

@@ -1,6 +1,11 @@
 /** Textos da UI em português (QA Tool MVP) */
 export const strings = {
   appName: 'QA Tool',
+  /** Textos partilhados por modais e ações genéricas */
+  common: {
+    ok: 'OK',
+    cancel: 'Cancelar',
+  },
   auth: {
     loginSubtitle: 'Inicia sessão para continuar',
     mockHintA11y: 'Dica de credenciais de demonstração',
@@ -82,10 +87,47 @@ export const strings = {
       'Este ecrã demonstra navegação tipada e stack de projetos. Os dados virão da API ou Firebase em fases seguintes.',
     detailFooter: 'MVP sem chamadas de rede.',
     emptyTitle: 'Sem projetos',
-    emptyDescription: 'Ainda não há projetos. Cria um no backoffice ou sincroniza mais tarde.',
+    emptyDescription:
+      'Ainda não há projetos. Usa o botão + no canto superior direito para criar um (dados locais).',
     emptyCta: 'Atualizar',
     refreshError: 'Não foi possível atualizar. Tenta outra vez.',
     openDetailA11y: 'Abrir detalhe do projeto',
+    addProjectA11y: 'Adicionar novo projeto',
+    clientLabelShort: 'Cliente',
+    create: {
+      title: 'Novo projeto',
+      subtitle: 'Preenche os dados principais. A lista é guardada localmente neste dispositivo.',
+      nameLabel: 'Nome',
+      namePh: 'Ex.: App mobile — checkout',
+      descriptionLabel: 'Descrição',
+      descriptionPh: 'Resumo do âmbito e objetivos de QA…',
+      clientLabel: 'Cliente',
+      clientPlaceholder: 'Selecionar cliente',
+      statusLabel: 'Estado',
+      statusActive: 'Ativo',
+      statusPaused: 'Pausado',
+      statusArchived: 'Arquivado',
+      submit: 'Criar projeto',
+      submitHint: 'Valida e adiciona o projeto à lista local',
+      validationTitle: 'Campos em falta',
+      nameInvalid: 'Indica um nome para o projeto.',
+      clientInvalid: 'Escolhe um cliente.',
+      successTitle: 'Projeto criado',
+      successBody: 'O projeto foi adicionado à tua lista (local).',
+      pickerTitle: 'Cliente',
+      pickerCloseA11y: 'Fechar lista de clientes',
+      cancel: 'Cancelar',
+    },
+    dangerZone: {
+      title: 'Zona de perigo',
+      description:
+        'Eliminar o projeto remove-o da lista neste dispositivo. Esta ação não pode ser anulada.',
+      deleteProject: 'Eliminar projeto',
+      deleteHint: 'Abre um diálogo de confirmação antes de remover o projeto da lista local.',
+      confirmTitle: 'Eliminar projeto?',
+      confirmMessage:
+        'O projeto será removido da lista local. Esta ação é irreversível.',
+    },
   },
   learning: {
     title: 'Aprendizagem',
