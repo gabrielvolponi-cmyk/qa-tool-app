@@ -1,5 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import { StyleSheet } from 'react-native';
 import { DashboardScreen } from '@screens/DashboardScreen/DashboardScreen';
 import { LearningScreen } from '@screens/LearningScreen/LearningScreen';
 import { SettingsScreen } from '@screens/SettingsScreen/SettingsScreen';
@@ -21,19 +22,28 @@ export function MainTabNavigator() {
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.text.tertiary,
         tabBarStyle: {
-          backgroundColor: theme.colors.background.primary,
-          borderTopColor: theme.colors.border.light,
+          backgroundColor: theme.colors.tabBar,
+          borderTopColor: theme.colors.tabBarBorder,
+          borderTopWidth: StyleSheet.hairlineWidth,
+          paddingTop: 8,
+          paddingBottom: 6,
+          minHeight: 58,
+          ...theme.shadows.tabBar,
         },
         tabBarLabelStyle: theme.typography.captionBold,
-        tabBarIcon: ({ color, size }) => {
-          const map: Record<keyof MainTabParamList, keyof typeof Ionicons.glyphMap> = {
-            Home: 'home-outline',
-            Projects: 'folder-open-outline',
-            Learning: 'school-outline',
-            Settings: 'settings-outline',
+        tabBarIcon: ({ color, size, focused }) => {
+          const map: Record<
+            keyof MainTabParamList,
+            { outline: keyof typeof Ionicons.glyphMap; solid: keyof typeof Ionicons.glyphMap }
+          > = {
+            Home: { outline: 'home-outline', solid: 'home' },
+            Projects: { outline: 'folder-open-outline', solid: 'folder-open' },
+            Learning: { outline: 'school-outline', solid: 'school' },
+            Settings: { outline: 'settings-outline', solid: 'settings' },
           };
-          const name = map[route.name as keyof MainTabParamList];
-          return <Ionicons name={name} size={size} color={color} />;
+          const icons = map[route.name as keyof MainTabParamList];
+          const name = focused ? icons.solid : icons.outline;
+          return <Ionicons name={name} size={focused ? size + 1 : size} color={color} />;
         },
       })}
     >

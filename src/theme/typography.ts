@@ -15,7 +15,7 @@ export const Typography: Record<string, TextStyle> = {
     fontWeight: '700',
     lineHeight: 36,
     fontFamily: primary,
-    letterSpacing: -0.3,
+    letterSpacing: -0.45,
   },
   h3: {
     fontSize: 24,

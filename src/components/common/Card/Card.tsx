@@ -4,9 +4,11 @@ import { useTheme } from '@theme';
 
 type CardProps = ViewProps & {
   children: React.ReactNode;
+  /** Barra de destaque no topo do cartão */
+  accent?: boolean;
 };
 
-export function Card({ children, style, ...rest }: CardProps) {
+export function Card({ children, style, accent = true, ...rest }: CardProps) {
   const { theme } = useTheme();
 
   const styles = useMemo(
@@ -15,10 +17,17 @@ export function Card({ children, style, ...rest }: CardProps) {
         wrap: {
           backgroundColor: theme.colors.card,
           borderRadius: theme.borderRadius.lg,
-          padding: theme.spacing.cardPadding,
+          overflow: 'hidden',
           borderWidth: StyleSheet.hairlineWidth,
           borderColor: theme.colors.border.light,
           ...theme.shadows.card,
+        },
+        accentBar: {
+          height: 3,
+          backgroundColor: theme.colors.primary,
+        },
+        inner: {
+          padding: theme.spacing.cardPadding,
         },
       }),
     [theme]
@@ -26,7 +35,8 @@ export function Card({ children, style, ...rest }: CardProps) {
 
   return (
     <View style={[styles.wrap, style]} {...rest}>
-      {children}
+      {accent ? <View style={styles.accentBar} /> : null}
+      <View style={styles.inner}>{children}</View>
     </View>
   );
 }

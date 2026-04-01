@@ -10,6 +10,11 @@ export type MainTabParamList = {
   Settings: undefined;
 };
 
+export type AuthStackParamList = {
+  Login: undefined;
+  RegisterQA: undefined;
+};
+
 declare global {
   namespace ReactNavigation {
     interface RootParamList extends MainTabParamList {}

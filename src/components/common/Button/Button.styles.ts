@@ -1,8 +1,8 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import type { Theme } from '@theme/createTheme';
 
 export function createButtonStyles(theme: Theme, variant: 'primary' | 'secondary' | 'ghost') {
-  const { colors, spacing, borderRadius, typography } = theme;
+  const { colors, spacing, borderRadius, typography, shadows } = theme;
 
   const base = {
     minHeight: spacing.buttonHeight,
@@ -16,7 +16,7 @@ export function createButtonStyles(theme: Theme, variant: 'primary' | 'secondary
     variant === 'primary'
       ? colors.primary
       : variant === 'secondary'
-        ? colors.background.tertiary
+        ? colors.brandMuted
         : 'transparent';
 
   const textColor =
@@ -26,14 +26,27 @@ export function createButtonStyles(theme: Theme, variant: 'primary' | 'secondary
         ? colors.text.primary
         : colors.primary;
 
+  const primaryExtra =
+    variant === 'primary'
+      ? Platform.select({
+          ios: shadows.primaryButton,
+          android: { elevation: 4 },
+          default: shadows.primaryButton,
+        })
+      : {};
+
   return StyleSheet.create({
     pressable: {
       ...base,
       backgroundColor: bg,
       opacity: 1,
+      borderWidth: variant === 'secondary' ? StyleSheet.hairlineWidth : 0,
+      borderColor: variant === 'secondary' ? colors.border.light : 'transparent',
+      ...primaryExtra,
     },
     pressed: {
-      opacity: 0.85,
+      opacity: 0.88,
+      transform: [{ scale: 0.98 }],
     },
     disabled: {
       opacity: 0.5,

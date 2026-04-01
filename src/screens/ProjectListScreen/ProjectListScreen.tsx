@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Screen } from '@components/common';
+import { Card, Screen } from '@components/common';
 import { strings } from '@constants/strings';
 import { MOCK_PROJECTS, type ProjectRow } from '@services/mockData';
 import { useTheme } from '@theme';
@@ -25,17 +25,15 @@ export function ProjectListScreen() {
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        list: { paddingVertical: theme.spacing.sm },
-        row: {
-          minHeight: theme.spacing.listItemHeight,
-          paddingVertical: theme.spacing.sm,
-          paddingHorizontal: theme.spacing.md,
-          borderBottomWidth: StyleSheet.hairlineWidth,
-          borderColor: theme.colors.border.light,
-          justifyContent: 'center',
+        list: {
+          paddingTop: theme.spacing.sm,
+          paddingBottom: theme.spacing.xl,
+        },
+        cardSpacing: {
+          marginBottom: theme.spacing.md,
         },
         name: {
-          ...theme.typography.body1,
+          ...theme.typography.h4,
           color: theme.colors.text.primary,
         },
         meta: {
@@ -45,15 +43,15 @@ export function ProjectListScreen() {
         },
         badge: {
           alignSelf: 'flex-start',
-          marginTop: theme.spacing.xs,
+          marginTop: theme.spacing.sm,
           paddingHorizontal: theme.spacing.sm,
           paddingVertical: theme.spacing.xs,
-          borderRadius: theme.borderRadius.sm,
-          backgroundColor: theme.colors.background.tertiary,
+          borderRadius: theme.borderRadius.full,
+          backgroundColor: theme.colors.brandMuted,
         },
         badgeText: {
           ...theme.typography.captionBold,
-          color: theme.colors.text.secondary,
+          color: theme.colors.primary,
           textTransform: 'capitalize',
         },
       }),
@@ -63,18 +61,20 @@ export function ProjectListScreen() {
   const renderItem = useCallback(
     ({ item }: { item: ProjectRow }) => (
       <Pressable
-        style={({ pressed }) => [styles.row, pressed && { opacity: 0.85 }]}
         onPress={() => navigation.navigate('ProjectDetail', { projectId: item.id, name: item.name })}
         accessibilityRole="button"
         accessibilityLabel={`${item.name}, ${strings.projects.openDetailA11y}`}
+        style={({ pressed }) => [{ opacity: pressed ? 0.92 : 1 }]}
       >
-        <Text style={styles.name}>{item.name}</Text>
-        <Text style={styles.meta}>
-          {item.openQaCount} QA abertos
-        </Text>
-        <View style={styles.badge}>
-          <Text style={styles.badgeText}>{item.status}</Text>
-        </View>
+        <Card style={styles.cardSpacing} accent={false}>
+          <Text style={styles.name}>{item.name}</Text>
+          <Text style={styles.meta}>
+            {item.openQaCount} QA abertos
+          </Text>
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>{item.status}</Text>
+          </View>
+        </Card>
       </Pressable>
     ),
     [navigation, styles]
@@ -98,6 +98,7 @@ export function ProjectListScreen() {
         data={items}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
+        style={{ flex: 1 }}
         contentContainerStyle={styles.list}
         ListEmptyComponent={listEmpty}
         refreshControl={

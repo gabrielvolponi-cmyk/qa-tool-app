@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Constants from 'expo-constants';
-import { Card, Screen } from '@components/common';
+import { Button, Card, Screen } from '@components/common';
 import { strings } from '@constants/strings';
 import { useAppStore, type ThemeMode } from '@store/appStore';
+import { useAuthStore } from '@store/authStore';
 import { useTheme } from '@theme';
 
 const MODES: { key: ThemeMode; label: string }[] = [
@@ -16,6 +17,7 @@ export function SettingsScreen() {
   const { theme } = useTheme();
   const themeMode = useAppStore((s) => s.themeMode);
   const setThemeMode = useAppStore((s) => s.setThemeMode);
+  const logout = useAuthStore((s) => s.logout);
 
   const version = Constants.expoConfig?.version ?? '1.0.0';
 
@@ -29,9 +31,14 @@ export function SettingsScreen() {
       color: theme.colors.text.primary,
     },
     sectionTitle: {
-      ...theme.typography.h4,
-      color: theme.colors.text.primary,
+      ...theme.typography.captionBold,
+      color: theme.colors.text.tertiary,
       marginBottom: theme.spacing.sm,
+      textTransform: 'uppercase',
+      letterSpacing: 0.6,
+    },
+    cardBlock: {
+      marginBottom: theme.spacing.lg,
     },
     hint: {
       ...theme.typography.caption,
@@ -49,11 +56,11 @@ export function SettingsScreen() {
     },
     optionActive: {
       borderColor: theme.colors.primary,
-      backgroundColor: theme.colors.background.tertiary,
+      backgroundColor: theme.colors.brandMuted,
     },
     optionIdle: {
       borderColor: theme.colors.border.light,
-      backgroundColor: theme.colors.card,
+      backgroundColor: theme.colors.background.secondary,
     },
     optionText: {
       ...theme.typography.body1,
@@ -81,27 +88,42 @@ export function SettingsScreen() {
         </Text>
       </View>
 
+      <Text style={styles.sectionTitle}>{strings.settings.account}</Text>
+      <View style={styles.cardBlock}>
+        <Card accent={false}>
+          <Button
+            title={strings.settings.signOut}
+            variant="secondary"
+            onPress={logout}
+            accessibilityHint={strings.settings.signOutHint}
+          />
+        </Card>
+      </View>
+
       <Text style={styles.sectionTitle}>{strings.settings.appearance}</Text>
-      <Text style={styles.hint}>{strings.settings.themeHint}</Text>
+      <View style={styles.cardBlock}>
+        <Card accent={false}>
+          <Text style={styles.hint}>{strings.settings.themeHint}</Text>
+          {MODES.map((m) => {
+            const active = themeMode === m.key;
+            return (
+              <Pressable
+                key={m.key}
+                accessibilityRole="radio"
+                accessibilityState={{ selected: active }}
+                accessibilityLabel={m.label}
+                onPress={() => onSelectMode(m.key)}
+                style={[styles.option, active ? styles.optionActive : styles.optionIdle]}
+              >
+                <Text style={styles.optionText}>{m.label}</Text>
+              </Pressable>
+            );
+          })}
+        </Card>
+      </View>
 
-      {MODES.map((m) => {
-        const active = themeMode === m.key;
-        return (
-          <Pressable
-            key={m.key}
-            accessibilityRole="radio"
-            accessibilityState={{ selected: active }}
-            accessibilityLabel={m.label}
-            onPress={() => onSelectMode(m.key)}
-            style={[styles.option, active ? styles.optionActive : styles.optionIdle]}
-          >
-            <Text style={styles.optionText}>{m.label}</Text>
-          </Pressable>
-        );
-      })}
-
-      <Text style={[styles.sectionTitle, { marginTop: theme.spacing.lg }]}>{strings.settings.about}</Text>
-      <Card>
+      <Text style={styles.sectionTitle}>{strings.settings.about}</Text>
+      <Card accent={false}>
         <Text style={styles.optionText}>
           {strings.settings.version}: {version}
         </Text>

@@ -1,10 +1,13 @@
 import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/native';
+import { useAuthStore } from '@store/authStore';
 import { useTheme } from '@theme';
+import { AuthStackNavigator } from './AuthStackNavigator';
 import { linking } from './linking';
 import { MainTabNavigator } from './MainTabNavigator';
 
 export function RootNavigator() {
   const { theme, isDark } = useTheme();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   const navTheme = {
     ...(isDark ? DarkTheme : DefaultTheme),
@@ -21,7 +24,7 @@ export function RootNavigator() {
 
   return (
     <NavigationContainer theme={navTheme} linking={linking}>
-      <MainTabNavigator />
+      {isAuthenticated ? <MainTabNavigator /> : <AuthStackNavigator />}
     </NavigationContainer>
   );
 }
