@@ -2,6 +2,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ProjectListScreen } from '@screens/ProjectListScreen/ProjectListScreen';
 import { ProjectCreateScreen } from '@screens/ProjectCreateScreen/ProjectCreateScreen';
 import { ProjectDetailScreen } from '@screens/ProjectDetailScreen/ProjectDetailScreen';
+import { ProjectEditScreen } from '@screens/ProjectEditScreen/ProjectEditScreen';
+import { ProjectDeleteScreen } from '@screens/ProjectDeleteScreen/ProjectDeleteScreen';
 import { strings } from '@constants/strings';
 import { useTheme } from '@theme';
 import type { ProjectsStackParamList } from '@app-types/navigation';
@@ -40,6 +42,16 @@ export function ProjectsStackNavigator() {
         name="ProjectDetail"
         component={ProjectDetailScreen}
         options={({ route }) => ({ title: route.params.name })}
+      />
+      <Stack.Screen
+        name="ProjectEdit"
+        component={ProjectEditScreen}
+        options={{ title: strings.projects.edit.title }}
+      />
+      <Stack.Screen
+        name="ProjectDelete"
+        component={ProjectDeleteScreen}
+        options={{ title: strings.projects.delete.title }}
       />
     </Stack.Navigator>
   );

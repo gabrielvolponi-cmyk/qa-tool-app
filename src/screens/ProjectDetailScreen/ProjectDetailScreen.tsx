@@ -1,5 +1,6 @@
-import React, { useCallback, useMemo } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useLayoutEffect, useMemo } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Button, Card, Screen } from '@components/common';
@@ -16,7 +17,6 @@ export function ProjectDetailScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<ProjectsStackParamList>>();
   const { params } = useRoute<RouteProps>();
   const project = useProjectsStore((s) => s.projectById(params.projectId));
-  const removeProject = useProjectsStore((s) => s.removeProject);
 
   const styles = useMemo(
     () =>
@@ -77,21 +77,27 @@ export function ProjectDetailScreen() {
         : strings.projects.create.statusArchived
     : '';
 
-  const confirmDelete = useCallback(() => {
-    removeProject(params.projectId);
-    navigation.goBack();
-  }, [navigation, params.projectId, removeProject]);
+  const goToDelete = useCallback(() => {
+    if (!project) return;
+    navigation.navigate('ProjectDelete', { projectId: project.id });
+  }, [navigation, project]);
 
-  const onPressDelete = useCallback(() => {
-    Alert.alert(strings.projects.dangerZone.confirmTitle, strings.projects.dangerZone.confirmMessage, [
-      { text: strings.common.cancel, style: 'cancel' },
-      {
-        text: strings.projects.dangerZone.deleteProject,
-        style: 'destructive',
-        onPress: confirmDelete,
-      },
-    ]);
-  }, [confirmDelete]);
+  useLayoutEffect(() => {
+    if (!project) return;
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={strings.projects.edit.title}
+          onPress={() => navigation.navigate('ProjectEdit', { projectId: project.id })}
+          hitSlop={12}
+          style={({ pressed }) => [{ opacity: pressed ? 0.75 : 1, paddingHorizontal: theme.spacing.sm }]}
+        >
+          <Ionicons name="create-outline" size={22} color={theme.colors.primary} />
+        </Pressable>
+      ),
+    });
+  }, [navigation, project, theme.colors.primary, theme.spacing.sm]);
 
   return (
     <Screen scroll>
@@ -123,7 +129,7 @@ export function ProjectDetailScreen() {
               <Button
                 title={strings.projects.dangerZone.deleteProject}
                 variant="danger"
-                onPress={onPressDelete}
+                onPress={goToDelete}
                 accessibilityHint={strings.projects.dangerZone.deleteHint}
               />
             </View>

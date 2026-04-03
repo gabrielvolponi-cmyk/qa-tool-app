@@ -11,6 +11,7 @@ type NewProjectInput = {
 type ProjectsState = {
   projects: ProjectRow[];
   addProject: (input: NewProjectInput) => ProjectRow;
+  updateProject: (id: string, input: NewProjectInput) => void;
   removeProject: (id: string) => void;
   projectById: (id: string) => ProjectRow | undefined;
 };
@@ -33,6 +34,20 @@ export const useProjectsStore = create<ProjectsState>((set, get) => ({
     set((s) => ({ projects: [row, ...s.projects] }));
     return row;
   },
+  updateProject: (id, input) =>
+    set((s) => ({
+      projects: s.projects.map((p) =>
+        p.id === id
+          ? {
+              ...p,
+              name: input.name.trim(),
+              description: input.description.trim(),
+              clientId: input.clientId,
+              status: input.status,
+            }
+          : p
+      ),
+    })),
   removeProject: (id) =>
     set((s) => ({ projects: s.projects.filter((p) => p.id !== id) })),
   projectById: (id) => get().projects.find((p) => p.id === id),

@@ -118,15 +118,35 @@ export const strings = {
       pickerCloseA11y: 'Fechar lista de clientes',
       cancel: 'Cancelar',
     },
+    edit: {
+      title: 'Editar projeto',
+      subtitle: 'Atualiza os dados do projeto. As alterações ficam guardadas localmente neste dispositivo.',
+      submit: 'Guardar alterações',
+      submitHint: 'Valida e atualiza o projeto na lista local',
+      successTitle: 'Projeto atualizado',
+      successBody: 'As alterações do projeto foram guardadas com sucesso.',
+    },
+    delete: {
+      title: 'Excluir projeto',
+      subtitle:
+        'Ao confirmar, o projeto deixa de aparecer na lista. Os dados existem apenas neste dispositivo (MVP local).',
+      nameLabel: 'Projeto que será excluído',
+      submit: 'Excluir projeto?',
+      submitHint: 'Abre um diálogo de confirmação antes de remover o projeto da lista local.',
+      successTitle: 'Projeto excluído com sucesso',
+      successBody: 'O projeto foi removido da sua lista local.',
+      successConfirmHint: 'Voltar a lista de projetos ?',
+      headerDeleteA11y: 'Excluir projeto',
+    },
     dangerZone: {
       title: 'Zona de perigo',
       description:
-        'Eliminar o projeto remove-o da lista neste dispositivo. Esta ação não pode ser anulada.',
-      deleteProject: 'Eliminar projeto',
-      deleteHint: 'Abre um diálogo de confirmação antes de remover o projeto da lista local.',
-      confirmTitle: 'Eliminar projeto?',
+        'Excluir o projeto remove-o da lista neste dispositivo. Esta ação não pode ser revertida.',
+      deleteProject: 'Excluir projeto ?',
+      deleteHint: 'Abre o modal de exclusão; a remoção só ocorre após a confirmação final.',
+      confirmTitle: 'Excluir projeto',
       confirmMessage:
-        'O projeto será removido da lista local. Esta ação é irreversível.',
+        'O projeto será excluído da lista local. Esta ação é irreversível.',
     },
   },
   learning: {
